@@ -35,9 +35,8 @@ fun parityCheck() {
 private fun check(colorCode: Int): Int {
     val color = rgbToColor(colorCode)
     for (glasses in 0..MAX_GLASSES) {
-        BeaconColorCombinations.colors(glasses).aroundColor(color, APPROX_SQRT) { c, _ ->
-            if (color.isApproximate(c)) return glasses
-        }
+        if (BeaconColorCombinations.colors(glasses).anyMatchInBoundary(color, BOUNDARY) { c -> color.isApproximate(c) })
+            return glasses
     }
     return -1
 }
@@ -45,9 +44,9 @@ private fun check(colorCode: Int): Int {
 private fun check2(colorCode: Int): Int {
     val color = rgbToColor(colorCode)
     for (glasses in 0..MAX_GLASSES) {
-        BeaconColorCombinations.colors(glasses).forEachColor { c, _ ->
-            if (color.isApproximate(c)) return glasses
-        }
+        if (BeaconColorCombinations.colors(glasses)
+                .anyMatch { c -> color.isApproximate(c) }
+        ) return glasses
     }
     return -1
 }
